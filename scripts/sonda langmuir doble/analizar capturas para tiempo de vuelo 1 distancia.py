@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Aug 28 10:52:27 2019
+
+@author: DG
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Mon May 13 12:47:22 2019
 
 @author: DG
@@ -147,63 +154,49 @@ plt.clf()
 plt.close()
 
 
-def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20):
-    carpetas=[]
-    for archivo in os.listdir(carpeta_madre):
-            carpetas.append(archivo)
-    imax=len(carpetas)
-    vuelo_medio=[]
-    desviación=[]
-    distancias=[]
-    for i in range(imax):
-        distancias.append(float(carpetas[i]))
-        carpeta=carpeta_madre+carpetas[i]+'/'
-        print(carpeta)
-        indice=[]
-        for archivo in os.listdir(carpeta):
-            if archivo.endswith(".csv"):
-                indice.append(archivo)
-        #curvasresistencias=np.zeros([int(len(indice)/2)])
-        jmax=len(indice)/2
-        vuelos=[]
-        for j in range(int(jmax)):
-        #    plt.clf()
-        #    plt.close()
+def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20):
+    print(carpeta)
+    indice=[]
+    for archivo in os.listdir(carpeta):
+        if archivo.endswith(".csv"):
+            indice.append(archivo)
+    #curvasresistencias=np.zeros([int(len(indice)/2)])
+    jmax=len(indice)/2
+    vuelos=[]
+    for j in range(int(jmax)):
+    #    plt.clf()
+    #    plt.close()
 #            print(indice[2*j])
-            bobina=Csv(carpeta,2*j,es_bobina=True)
-            resistencia=Csv(carpeta,2*j+1,punta=punta)
-            #resistencia.y-=ruido
-            resistencia.filtrar_por_vecinos(n_vecinos)
-            bobina.sacar_lineal()
-            pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
-            altura_pico_bobina=bobina.y[pico_bobina]
-            tiempo0=bobina.x[pico_bobina]
-            bobina.x-=tiempo0
-            resistencia.x-=tiempo0
-            
-            resistencia.butcher_noice(tinf,tsup,1,reduction)
-            resistencia.filtrar(fc,order)
-#            bobina.plot(fig_num=1,tamañox=14,tamañoy=6,color='b-')
-#            resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
-            
-            bottom=posicion_x(resistencia.x,tinf)
-            upper=posicion_x(resistencia.x,tsup)
-            
-            pico_resistencia=detect_peaks(resistencia.y[bottom:upper],0.8*max(resistencia.y[bottom:upper]),10)
-            if len(pico_resistencia)>0:
-                pico_resistencia=pico_resistencia[0]+bottom
-        #    print(resistencia.x[pico_resistencia])
+        bobina=Csv(carpeta,2*j,es_bobina=True)
+        resistencia=Csv(carpeta,2*j+1,punta=punta)
+        #resistencia.y-=ruido
+        resistencia.filtrar_por_vecinos(n_vecinos)
+        bobina.sacar_lineal()
+        pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
+        altura_pico_bobina=bobina.y[pico_bobina]
+        tiempo0=bobina.x[pico_bobina]
+        bobina.x-=tiempo0
+        resistencia.x-=tiempo0
+        
+        resistencia.butcher_noice(tinf,tsup,1,reduction)
+        resistencia.filtrar(fc,order)
+        bobina.plot(fig_num=1,tamañox=14,tamañoy=6,color='b-')
+        resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
+        
+        bottom=posicion_x(resistencia.x,tinf)
+        upper=posicion_x(resistencia.x,tsup)
+        
+        pico_resistencia=detect_peaks(resistencia.y[bottom:upper],0.8*max(resistencia.y[bottom:upper]),10)
+        if len(pico_resistencia)>0:
+            pico_resistencia=pico_resistencia[0]+bottom
+    #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
-                vuelos.append(resistencia.x[pico_resistencia])
-        vuelo_medio.append(np.mean(vuelos))
-        desviación.append(np.std(vuelos))
+            vuelos.append(resistencia.x[pico_resistencia])
     return distancias,vuelo_medio,desviación
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
-carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28/tiempo vuelo/'
-carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/'
-carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/tiempo vuelo/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/166/'
 
 tinf=2*10**-6
 tsup=6*10**-6
@@ -227,12 +220,6 @@ fc=2*10**5,order=5,reduction=0.5                da 1.646924319122793e-08
 distancias=np.array(distancias)
 vuelo_medio=np.array(vuelo_medio)
 desviación=np.array(desviación)
-
-distancias2,vuelo_medio2,desviación2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
-
-distancias=np.concatenate([distancias,distancias2])
-vuelo_medio=np.concatenate([vuelo_medio,vuelo_medio2])
-desviación=np.concatenate([desviación,desviación2])
 
 f=lambda  x,A,y0:A*x+y0
 parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=True) 
