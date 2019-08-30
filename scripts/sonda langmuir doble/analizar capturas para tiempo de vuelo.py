@@ -96,7 +96,7 @@ class Data:
         down=posicion_x(self.x,tinf)
         upper=posicion_x(self.x,tsup)
         maximum=max(abs(self.y[down:upper]))*leeway
-        for i in range():
+        for i in range(self.long):
             self.y[i]=max(self.y[i],-maximum)
             self.y[i]=min(self.y[i],maximum)
    
@@ -107,7 +107,7 @@ class Data:
         mask=abs(self.y)>maximum
         for i in range(self.long):
             if mask[i]==True:
-                self.y[i]=self.y[i-1]*reduction
+                self.y[i]=self.y[i-1]
 
      
 class Csv(Data):
@@ -181,7 +181,7 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             bobina.x-=tiempo0
             resistencia.x-=tiempo0
             
-            resistencia.butcher_noice(tinf,tsup,1,reduction)
+            resistencia.butcher(tinf,tsup,1)
             resistencia.filtrar(fc,order)
 #            bobina.plot(fig_num=1,tamañox=14,tamañoy=6,color='b-')
 #            resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
@@ -189,9 +189,9 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             bottom=posicion_x(resistencia.x,tinf)
             upper=posicion_x(resistencia.x,tsup)
             
-            pico_resistencia=detect_peaks(resistencia.y[bottom:upper],0.8*max(resistencia.y[bottom:upper]),10)
+            pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),10)
             if len(pico_resistencia)>0:
-                pico_resistencia=pico_resistencia[0]+bottom
+                pico_resistencia=pico_resistencia[0]
         #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
                 vuelos.append(resistencia.x[pico_resistencia])
@@ -202,13 +202,13 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28/tiempo vuelo/'
-carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
 carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/tiempo vuelo/'
 
 tinf=2*10**-6
-tsup=6*10**-6
+tsup=8*10**-6
   
-distancias,vuelo_medio,desviación=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
+distancias,vuelo_medio,desviación=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
 '''
 #funcan: 
 fc=7*10**5,order=4,reduction=0.7                da 6.12638808829e-08
@@ -222,22 +222,28 @@ fc=20*10**5,order=2,reduction=0.5               da 1.56990215733e-08
 fc=7*10**5,order=2,reduction=0.8 feo ajuste     da 3.113408864136538e-08
 fc=2*10**5,order=2,reduction=0.5                da 1.2561231684271965e-08
 fc=2*10**5,order=5,reduction=0.5                da 1.646924319122793e-08
+
+np.savetxt('tiempos de vuelo.txt',[distancias,vuelo_medio,desviación], delimiter='\t')
+
+
+limpias y bien pensadas:
+fc=1*10**5,order=4                  2.4864546887924663e-08
+fc=1.5*10**5                        3.298788135324044e-08
+fc=1*10**5,order=2                  2.979818679696833e-08
 '''
 
 distancias=np.array(distancias)
 vuelo_medio=np.array(vuelo_medio)
 desviación=np.array(desviación)
 
-distancias2,vuelo_medio2,desviación2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
-
-distancias=np.concatenate([distancias,distancias2])
-vuelo_medio=np.concatenate([vuelo_medio,vuelo_medio2])
-desviación=np.concatenate([desviación,desviación2])
+#distancias=np.delete(distancias,4)
+#vuelo_medio=np.delete(vuelo_medio,4)
+#desviación=np.delete(desviación,4)
 
 f=lambda  x,A,y0:A*x+y0
 parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=True) 
 
-print(parametros_optimizados[0])   
+print(parametros_optimizados[0],'+-',np.sqrt(matriz_covarianza[0,0]))   
 plt.rcParams['font.size']=20#tamaño de fuente
 plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
 plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)

@@ -173,7 +173,6 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
         resistencia.filtrar_por_vecinos(n_vecinos)
         bobina.sacar_lineal()
         pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
-        altura_pico_bobina=bobina.y[pico_bobina]
         tiempo0=bobina.x[pico_bobina]
         bobina.x-=tiempo0
         resistencia.x-=tiempo0
@@ -192,7 +191,7 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
     #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
             vuelos.append(resistencia.x[pico_resistencia])
-    return distancias,vuelo_medio,desviación
+    return vuelos
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
@@ -201,39 +200,7 @@ carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/166/'
 tinf=2*10**-6
 tsup=6*10**-6
   
-distancias,vuelo_medio,desviación=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
-'''
-#funcan: 
-fc=7*10**5,order=4,reduction=0.7                da 6.12638808829e-08
-fc=10*10**5,order=4,reduction=0.5               da 4.03203424136e-08
-fc=7*10**5,order=4,reduction=1                  da 4.04528670502e-08
-fc=10*10**5,order=4,reduction=1                 da 2.74604102974e-08
-fc=10*10**5,order=4,reduction=1 sin butcher     da 5.61846018492e-08
-fc=4*10**5,order=2,reduction=1 sin butcher      da 5.85702501558e-08
-fc=4*10**5,order=2,reduction=0.7                da 1.85755454758e-08
-fc=20*10**5,order=2,reduction=0.5               da 1.56990215733e-08
-fc=7*10**5,order=2,reduction=0.8 feo ajuste     da 3.113408864136538e-08
-fc=2*10**5,order=2,reduction=0.5                da 1.2561231684271965e-08
-fc=2*10**5,order=5,reduction=0.5                da 1.646924319122793e-08
-'''
+vuelos=tiempo_vuelo_1_carpeta(carpeta_madre,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
 
-distancias=np.array(distancias)
-vuelo_medio=np.array(vuelo_medio)
-desviación=np.array(desviación)
-
-f=lambda  x,A,y0:A*x+y0
-parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=True) 
-
-print(parametros_optimizados[0])   
-plt.rcParams['font.size']=20#tamaño de fuente
-plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
-plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
-plt.plot(distancias-min(distancias),f(distancias, *parametros_optimizados)*10**6, 'g-', label = 'Ajuste')
-plt.plot(distancias-min(distancias),vuelo_medio*10**6,'b*')
-plt.errorbar(distancias-min(distancias),vuelo_medio*10**6,desviación*10**6,linestyle = 'None')
-plt.grid(True) # Para que quede en hoja cuadriculada
-plt.xlabel('Distancia (mm)')
-plt.ylabel('Tiempo de vuelo (us)')
-plt.legend(loc = 'best') 
-
-#print(np.mean(vuelo),'+-',np.std(vuelo)/np.mean(vuelo))
+vuelo_medio=np.mean(vuelos)
+print(vuelo_medio)
