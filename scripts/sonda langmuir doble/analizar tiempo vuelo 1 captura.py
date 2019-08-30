@@ -161,15 +161,13 @@ plt.clf()
 plt.close()
 
 
-def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20):
+def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20,pico=True):
     print(carpeta)
     indice=[]
     for archivo in os.listdir(carpeta):
         if archivo.endswith(".csv"):
             indice.append(archivo)
     #curvasresistencias=np.zeros([int(len(indice)/2)])
-    jmax=len(indice)/2
-    vuelos=[]
     j=medicion
     print(indice[2*j])
     bobina=Csv(carpeta,2*j,es_bobina=True)
@@ -177,8 +175,9 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
     #resistencia.y-=ruido
     resistencia.filtrar_por_vecinos(n_vecinos)
     bobina.sacar_lineal()
-    pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
+    pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
     tiempo0=bobina.x[pico_bobina]
+    print(tiempo0)
     bobina.x-=tiempo0
     resistencia.x-=tiempo0
     plt.plot(resistencia.x,resistencia.y,'b')
@@ -186,14 +185,16 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
     resistencia.butcher(tinf,tsup,1)
     plt.plot(resistencia.x,resistencia.y,'r')
     resistencia.filtrar(fc,order)
-#    bobina.plot(fig_num=1,tamañox=14,tamañoy=6,color='b-')
+    bobina.plot(fig_num=1,escala=0.01,tamañox=14,tamañoy=6,color='b-')
 #    resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
     
     bottom=posicion_x(resistencia.x,tinf)
     upper=posicion_x(resistencia.x,tsup)
-    
-    pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),10)
-    
+    if pico==True:
+        pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100,valley=True)
+    else:
+        pico_resistencia=detect_peaks(resistencia.y,-0.8*max(resistencia.y),100,valley=False)
+        
     plt.plot(resistencia.x,resistencia.y,'g')
     if len(pico_resistencia)>0:
         pico_resistencia=pico_resistencia[0]#+bottom
@@ -205,7 +206,8 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/162/'
-#carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/175.5/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/165/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/178/'
 
 tinf=2*10**-6
 tsup=6*10**-6
@@ -213,6 +215,7 @@ tsup=6*10**-6
 j=-1
 '''
 j+=1
-vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
+#vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
+vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,pico=False)
 
 print(vuelo)

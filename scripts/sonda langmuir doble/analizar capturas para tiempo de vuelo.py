@@ -175,7 +175,7 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             #resistencia.y-=ruido
             resistencia.filtrar_por_vecinos(n_vecinos)
             bobina.sacar_lineal()
-            pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
+            pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
             altura_pico_bobina=bobina.y[pico_bobina]
             tiempo0=bobina.x[pico_bobina]
             bobina.x-=tiempo0
