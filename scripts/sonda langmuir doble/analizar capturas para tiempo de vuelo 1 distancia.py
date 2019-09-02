@@ -103,7 +103,7 @@ class Data:
         down=posicion_x(self.x,tinf)
         upper=posicion_x(self.x,tsup)
         maximum=max(abs(self.y[down:upper]))*leeway
-        for i in range():
+        for i in range(self.long):
             self.y[i]=max(self.y[i],-maximum)
             self.y[i]=min(self.y[i],maximum)
    
@@ -114,7 +114,7 @@ class Data:
         mask=abs(self.y)>maximum
         for i in range(self.long):
             if mask[i]==True:
-                self.y[i]=self.y[i-1]*reduction
+                self.y[i]=self.y[i-1]
 
      
 class Csv(Data):
@@ -154,7 +154,7 @@ plt.clf()
 plt.close()
 
 
-def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20):
+def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20,invert=False):
     print(carpeta)
     indice=[]
     for archivo in os.listdir(carpeta):
@@ -166,41 +166,46 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
     for j in range(int(jmax)):
     #    plt.clf()
     #    plt.close()
-#            print(indice[2*j])
+        print(indice[2*j])
         bobina=Csv(carpeta,2*j,es_bobina=True)
         resistencia=Csv(carpeta,2*j+1,punta=punta)
         #resistencia.y-=ruido
         resistencia.filtrar_por_vecinos(n_vecinos)
         bobina.sacar_lineal()
-        pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
+        pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
         tiempo0=bobina.x[pico_bobina]
         bobina.x-=tiempo0
         resistencia.x-=tiempo0
+        if invert==True:
+            resistencia.y*=-1
         
-        resistencia.butcher_noice(tinf,tsup,1,reduction)
+        resistencia.butcher(tinf,tsup,1)
+        plt.plot(resistencia.x,resistencia.y*100,'g')
         resistencia.filtrar(fc,order)
+        plt.plot(resistencia.x,resistencia.y*100,'r')
         bobina.plot(fig_num=1,tamañox=14,tamañoy=6,color='b-')
-        resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
+#        resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
         
         bottom=posicion_x(resistencia.x,tinf)
         upper=posicion_x(resistencia.x,tsup)
         
-        pico_resistencia=detect_peaks(resistencia.y[bottom:upper],0.8*max(resistencia.y[bottom:upper]),10)
-        if len(pico_resistencia)>0:
-            pico_resistencia=pico_resistencia[0]+bottom
+        pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100)
+        if len(pico_resistencia)>-1:
+            pos_pico_resistencia=pico_resistencia[0]
     #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
-            vuelos.append(resistencia.x[pico_resistencia])
+            vuelos.append(resistencia.x[pos_pico_resistencia])
     return vuelos
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/166/'
+carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
 
 tinf=2*10**-6
 tsup=6*10**-6
   
-vuelos=tiempo_vuelo_1_carpeta(carpeta_madre,tinf,tsup,fc=7*10**5,order=4,reduction=0.7 ,punta=10,n_vecinos=50)
-
+vuelos=tiempo_vuelo_1_carpeta(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
+print(vuelos)
 vuelo_medio=np.mean(vuelos)
-print(vuelo_medio)
+print(vuelo_medio,np.std(vuelos)/(np.sqrt(len(vuelos))-1))

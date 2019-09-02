@@ -161,7 +161,7 @@ plt.clf()
 plt.close()
 
 
-def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20,pico=True):
+def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20,invert=False):
     print(carpeta)
     indice=[]
     for archivo in os.listdir(carpeta):
@@ -177,9 +177,11 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
     bobina.sacar_lineal()
     pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
     tiempo0=bobina.x[pico_bobina]
-    print(tiempo0)
+#    print(tiempo0)
     bobina.x-=tiempo0
     resistencia.x-=tiempo0
+    if invert==True:
+        resistencia.y*=-1
     plt.plot(resistencia.x,resistencia.y,'b')
     
     resistencia.butcher(tinf,tsup,1)
@@ -190,15 +192,11 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
     
     bottom=posicion_x(resistencia.x,tinf)
     upper=posicion_x(resistencia.x,tsup)
-    if pico==True:
-        pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100,valley=True)
-    else:
-        pico_resistencia=detect_peaks(resistencia.y,-0.8*max(resistencia.y),100,valley=False)
-        
+    pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100,show=False)     
     plt.plot(resistencia.x,resistencia.y,'g')
     if len(pico_resistencia)>0:
-        pico_resistencia=pico_resistencia[0]#+bottom
-        vuelo=resistencia.x[pico_resistencia]
+        pos_pico_resistencia=pico_resistencia[0]#+bottom
+        vuelo=resistencia.x[pos_pico_resistencia]
     else:
         vuelo=0
     return vuelo
@@ -208,7 +206,7 @@ carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/162/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/165/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/178/'
-
+carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
 tinf=2*10**-6
 tsup=6*10**-6
 '''
@@ -216,6 +214,6 @@ j=-1
 '''
 j+=1
 #vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
-vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,pico=False)
+vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
 
 print(vuelo)

@@ -147,7 +147,7 @@ plt.clf()
 plt.close()
 
 
-def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20):
+def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos=20,invert=False):
     carpetas=[]
     for archivo in os.listdir(carpeta_madre):
             carpetas.append(archivo)
@@ -180,6 +180,8 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             tiempo0=bobina.x[pico_bobina]
             bobina.x-=tiempo0
             resistencia.x-=tiempo0
+            if invert==True:
+                resistencia.y*=-1
             
             resistencia.butcher(tinf,tsup,1)
             resistencia.filtrar(fc,order)
@@ -191,24 +193,24 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             
             pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),10)
             if len(pico_resistencia)>0:
-                pico_resistencia=pico_resistencia[0]
+                pos_pico_resistencia=pico_resistencia[0]
         #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
-                vuelos.append(resistencia.x[pico_resistencia])
+                vuelos.append(resistencia.x[pos_pico_resistencia])
         vuelo_medio.append(np.mean(vuelos))
-        desviación.append(np.std(vuelos))
+        desviación.append(np.std(vuelos)/(np.sqrt(jmax)-1))
     return distancias,vuelo_medio,desviación
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
-carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
-carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28/tiempo vuelo/'
-carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
-carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/tiempo vuelo/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
+carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-30 tiempo vuelo/'
+#carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
+#carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/tiempo vuelo/'
 
 tinf=2*10**-6
-tsup=8*10**-6
+tsup=6*10**-6
   
-distancias,vuelo_medio,desviación=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
+distancias_dia_1,vuelo_medio_dia_1,desviación_dia_1=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
 '''
 #funcan: 
 fc=7*10**5,order=4,reduction=0.7                da 6.12638808829e-08
@@ -232,13 +234,27 @@ fc=1.5*10**5                        3.298788135324044e-08
 fc=1*10**5,order=2                  2.979818679696833e-08
 '''
 
-distancias=np.array(distancias)
-vuelo_medio=np.array(vuelo_medio)
-desviación=np.array(desviación)
+distancias_dia_1=np.array(distancias_dia_1)
+vuelo_medio_dia_1=np.array(vuelo_medio_dia_1)
+desviación_dia_1=np.array(desviación_dia_1)
 
+distancias_dia_2,vuelo_medio_dia_2,desviación_dia_2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50,invert=True)
+#%%
+distancias2=np.array(distancias_dia_2)
+vuelo_medio2=np.array(vuelo_medio_dia_2)#-2.95*10**-6
+desviación2=np.array(desviación_dia_2)
+
+distancias=np.concatenate((distancias_dia_1,distancias2), axis = 0)
+vuelo_medio=np.concatenate((vuelo_medio_dia_1,vuelo_medio2), axis = 0)
+desviación=np.concatenate((desviación_dia_1,desviación2), axis = 0)
 #distancias=np.delete(distancias,4)
 #vuelo_medio=np.delete(vuelo_medio,4)
 #desviación=np.delete(desviación,4)
+
+
+'''
+distancias,vuelo_medio,desviación=np.loadtxt('tiempos de vuelo.txt', delimiter='\t')
+'''
 
 f=lambda  x,A,y0:A*x+y0
 parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=True) 
@@ -256,3 +272,4 @@ plt.ylabel('Tiempo de vuelo (us)')
 plt.legend(loc = 'best') 
 
 #print(np.mean(vuelo),'+-',np.std(vuelo)/np.mean(vuelo))
+#plt.plot(distancias2-min(distancias),vuelo_medio2*10**6-3,'b*')

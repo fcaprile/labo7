@@ -51,7 +51,7 @@ def y_dado_x(x,y,valorx):
     pos=posicion_x(x,valorx)
     return y[pos]
 
-def curva_por_carpeta(carpeta_base):
+def curva_por_carpeta(carpeta_base,tinf,tsup):
     indice_carpetas=[]
     for carpeta in os.listdir(carpeta_base):
         indice_carpetas.append(carpeta)
@@ -87,10 +87,10 @@ def curva_por_carpeta(carpeta_base):
             tiempo=R.x
             #y=filtrar(data)
             #promedio entre 4 y 5 us
-            t1=4*10**-6
-            t2=5*10**-6
-            pos1=posicion_x(tiempo,t1)
-            pos2=posicion_x(tiempo,t2)
+#            t1=4*10**-6
+#            t2=6*10**-6
+            pos1=posicion_x(tiempo,tinf)
+            pos2=posicion_x(tiempo,tsup)
             corr=np.mean(data[pos1:pos2])
             corrientes.append(corr)
             corrientes_esta_carpeta.append(corr)
@@ -129,43 +129,24 @@ def vector_entre(x,xinf,xsup):
 
 #%%
 #analizo
-carpeta_base1='C:/Users/ferchi/Desktop/github labo 6/labo6/mediciones/5-15/'
-carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/'
+carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-28/'
+#carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/'
 #falta filtrar 6-3
 
-tc,c,tensiones,corrientes,error_tensiones,error_corrientes=curva_por_carpeta(carpeta_base1)#,sacar_outliers=True)
+tc,c,tensiones,corrientes,error_tensiones,error_corrientes=curva_por_carpeta(carpeta_base1,4*10**-6,6*10**-6)#,sacar_outliers=True)
 #t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2)#,sacar_outliers=True)
 #t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3)#,sacar_outliers=True)
 #t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4)#,sacar_outliers=True)
-#%%
+'''
+np.savetxt('curva carac 1000V con t entre 4 y 6.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
 tensiones,corrientes,error_tensiones,error_corrientes=np.loadtxt('curva carac 800V final.txt',delimiter='\t')
-
-
-#%%
-#ploteo todas las mediciones
-
-#tensiones=np.concatenate([t1,t2,t3,t4])
-#corrientes=np.concatenate([np.array(c1),c2,c3,c4])*568
-
-A2=np.array([tensiones,corrientes])
-A2=np.transpose(A2)
-A2=A2[A2[:,0].argsort()]
-A2=np.transpose(A2)#dificil de creer pero funciona
-tensiones,corrientes=A2
-
-#corrientes-=y_dado_x(tensiones,corrientes,0)
-
-plt.plot(tensiones,-corrientes*1000,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
-plt.ylabel('Corriente (mA)')
-plt.xlabel('Tensión (V)')
-plt.grid()
-#np.savetxt('curva carac 1000V con t entre 4 y 5 polarizada bien.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
+'''
 #%%
 #ploteo mediciones promediadas
 #tensiones=np.concatenate([tm1,tm2,tm3,tm4])
-#corrientes=np.concatenate([np.array(cm1),cm2,cm3,cm4])*568#ver de dividir por 2 a c1...
+#corrientes=np.concatenate([cm1,cm2,cm3,cm4])
 #error_tensiones=np.concatenate([et1,et2,et3,et4])
-#error_corrientes=np.concatenate([ec1,ec2,ec3,ec4])*568
+#error_corrientes=np.concatenate([ec1,ec2,ec3,ec4])
 
 A2=np.array([tensiones,corrientes,error_corrientes,error_tensiones])
 A2=np.transpose(A2)
@@ -177,8 +158,8 @@ tensiones,corrientes,error_corrientes,error_tensiones=A2
 #tensiones=tensiones*-1
 #corrientes*=corrientes[24]
 
-plt.plot(tensiones[:-1],corrientes[:-1]*1000,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
-plt.errorbar(tensiones[:-1],corrientes[:-1]*1000,error_corrientes[1:]*1000,linestyle = 'None')
+plt.plot(-tensiones[:-1],corrientes[:-1]*1000,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
+plt.errorbar(-tensiones[:-1],corrientes[:-1]*1000,error_corrientes[1:]*1000,linestyle = 'None')
 
 plt.ylabel('Corriente (mA)')
 plt.xlabel('Tensión (V)')
