@@ -1,33 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Aug 30 12:10:11 2019
-
-@author: DG
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Aug 28 10:52:27 2019
-
-@author: DG
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 13 12:47:22 2019
-
-@author: DG
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 13 00:05:48 2019
-
-@author: ferchi
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Mon Apr  8 15:35:12 2019
 
 @author: Admin
@@ -201,19 +173,19 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
         vuelo=0
     return vuelo
 #%%
-#carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
-carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/162/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/165/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/178/'
 carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/156/'
 tinf=2*10**-6
 tsup=6*10**-6
 '''
 j=-1
 '''
 j+=1
-#vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
-vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
+vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
+#vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
 
 print(vuelo)

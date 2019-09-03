@@ -190,7 +190,7 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
         upper=posicion_x(resistencia.x,tsup)
         
         pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100)
-        if len(pico_resistencia)>-1:
+        if len(pico_resistencia)>0:
             pos_pico_resistencia=pico_resistencia[0]
     #    print(resistencia.x[pico_resistencia])
 #            if len(pico_resistencia)>0:
@@ -200,6 +200,8 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/166/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/165/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/175.5/'
 carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
 
 tinf=2*10**-6

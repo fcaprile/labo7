@@ -210,7 +210,7 @@ carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-30 tiempo vuel
 tinf=2*10**-6
 tsup=6*10**-6
   
-distancias_dia_1,vuelo_medio_dia_1,desviación_dia_1=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
+distancias_dia_1,vuelo_medio_dia_1,desviación_dia_1=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=0.7*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
 '''
 #funcan: 
 fc=7*10**5,order=4,reduction=0.7                da 6.12638808829e-08
@@ -238,7 +238,7 @@ distancias_dia_1=np.array(distancias_dia_1)
 vuelo_medio_dia_1=np.array(vuelo_medio_dia_1)
 desviación_dia_1=np.array(desviación_dia_1)
 
-distancias_dia_2,vuelo_medio_dia_2,desviación_dia_2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=1*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50,invert=True)
+distancias_dia_2,vuelo_medio_dia_2,desviación_dia_2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=0.7*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50,invert=True)
 #%%
 distancias2=np.array(distancias_dia_2)
 vuelo_medio2=np.array(vuelo_medio_dia_2)#-2.95*10**-6
