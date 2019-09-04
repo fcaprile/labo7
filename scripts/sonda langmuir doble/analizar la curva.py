@@ -124,7 +124,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
     par_sat,cov_sat=ajustar_entre(f,tensiones,corrientes,error_corrientes,sat_min,sat_max,plot=False)
     Error_Te=np.sqrt(cov_lin[0,0]*par_sat[0]**2/(2*par_lin[0]**2)**2+cov_sat[1,1]/(2*par_lin[0])**2)
     
-    Te=1/2/par_lin[0]*0.050
+    Te=1/2/par_lin[0]*par_sat[1]
     print('A orden simetrico, Te=',Te,'+-',Error_Te)
     
     if plot==True:
@@ -147,7 +147,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
         
         
 #%%
-tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 4 y 5 polarizada bien.txt',delimiter='\t')
+tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 4 y 6.txt',delimiter='\t')
 #analisis_simetrico_rama_pos(tensiones,corrientes,error_corrientes,0,10,30)
 
 #%%  Corro la funcion para analizar
@@ -157,12 +157,14 @@ tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 
 #error_corrientes/=1000
 
 #sacar outliers
-tensiones2=np.delete(tensiones,0)#si es .np
-corrientes2=np.delete(corrientes,0)#si es .np
-error_corrientes2=np.delete(error_corrientes,0)#si es .np
+#tensiones2=np.delete(tensiones,0)#si es .np
+#corrientes2=np.delete(corrientes,0)#si es .np
+#error_corrientes2=np.delete(error_corrientes,0)#si es .np
 #tensiones=np.delete(tensiones,7)#si es .np
 #corrientes=np.delete(corrientes,7)#si es .np
 #error_corrientes=np.delete(error_corrientes,7)#si es .np
-#corrientes=-corrientes       
-analisis_simetrico(tensiones,corrientes,error_corrientes,-40,40,-60,-50)    
+#corrientes=-corrientes   
+
+corrientes-=y_dado_x(tensiones,corrientes,0)    
+analisis_simetrico(tensiones,corrientes,error_corrientes,-20,00,-60,-35)    
  

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun  5 10:43:02 2019
+Created on Wed Sep  4 14:48:49 2019
 
 @author: DG
 """
@@ -123,68 +123,6 @@ def y_dado_x(x,y,valorx):
     pos=posicion_x(x,valorx)
     return y[pos]
 
-def curva_por_carpeta(carpeta_base,tinf,tsup,filtrar=False):
-    indice_carpetas=[]
-    for carpeta in os.listdir(carpeta_base):
-        indice_carpetas.append(carpeta)
-#    print(indice_carpetas)
-    corrientes=[]
-    tensiones=[]
-    corriente_media=[]
-    tension_media=[]
-    error_corriente_media=[]
-    error_tension_media=[]
-    for i in indice_carpetas:
-        corrientes_esta_carpeta=[]
-        tensiones_esta_carpeta=[]
-        carpeta=carpeta_base+i+'/'
-#        print(carpeta)
-        indice=[]
-        for archivo in os.listdir(carpeta):
-            if archivo.endswith(".csv"):
-                indice.append(archivo)
-#        print(indice)
-        descarga_media=[]
-        for j in range(int(len(indice)/2)):   
-            R=Csv(carpeta,2*j+1)
-            bobina=Csv(carpeta,2*j,es_bobina=True)
-            bobina.sacar_lineal()
-            pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
-            tiempo0=bobina.x[pico_bobina]
-            altura_pico_bobina=bobina.y[pico_bobina]
-            bobina.x-=tiempo0
-            R.x-=tiempo0
-            data=-R.y/altura_pico_bobina
-            descarga_media.append(altura_pico_bobina)
-            tiempo=R.x
-            if filtrar==True:
-                R.butcher(tinf,tsup,1)
-                R.filtrar_por_vecinos(200)
-                R.filtrar(fc,order)
-            #promedio entre 4 y 5 us
-#            t1=4*10**-6
-#            t2=6*10**-6
-            pos1=posicion_x(tiempo,tinf)
-            pos2=posicion_x(tiempo,tsup)
-            corr=np.mean(data[pos1:pos2])
-            corrientes.append(corr)
-            corrientes_esta_carpeta.append(corr)
-            #restar caida sobre resistencia
-            V=float(i)-np.mean(R.y[pos1:pos2])
-            tensiones.append(V)
-            tensiones_esta_carpeta.append(V)
-        corriente_media.append(np.mean(corrientes_esta_carpeta)*10*np.mean(descarga_media)/180)        
-        tension_media.append(np.mean(tensiones_esta_carpeta))        
-        error_corriente_media.append(np.std(corrientes_esta_carpeta)*10*np.mean(descarga_media)/180)
-        error_tension_media.append(np.std(tensiones_esta_carpeta))#/np.sqrt(len(corrientes_esta_carpeta)))
-        print('Carpeta',i,'analizada!')
-    
-#    tensiones=[]
-#    for i in indice_carpetas:
-#        tensiones.append(float(i))    
-    
-    return tensiones,corrientes,tension_media,corriente_media,error_tension_media,error_corriente_media
-
 def ajustar_entre(f,x,y,ey,xinf,xsup,escalax=1,escalay=1,color='g',label='Ajuste',plot=True):
     a=posicion_x(x,xinf)
     b=posicion_x(x,xsup)    
@@ -201,45 +139,4 @@ def vector_entre(x,xinf,xsup):
     a=posicion_x(x,xinf)
     b=posicion_x(x,xsup)    
     return x[a:b]    
-
-#%%
-#analizo
-carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-28/'
-carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/'
-carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-4/carac/'
-#falta filtrar 6-3
-fc=0.7*10**5
-order=4
-
-tc,c,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,4*10**-6,6*10**-6,filtrar=False)#,sacar_outliers=True)
-t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,4*10**-6,6*10**-6,filtrar=False)#,sacar_outliers=True)
-#t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3)#,sacar_outliers=True)
-#t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4)#,sacar_outliers=True)
-'''
-np.savetxt('curva carac 1000V con t entre 4 y 6.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
-tensiones,corrientes,error_tensiones,error_corrientes=np.loadtxt('curva carac 800V final.txt',delimiter='\t')
-'''
-#%%
-#ploteo mediciones promediadas
-tensiones=np.concatenate([tm1,tm2])
-corrientes=np.concatenate([cm1,cm2])
-error_tensiones=np.concatenate([et1,et2])
-error_corrientes=np.concatenate([ec1,ec2])
-
-A2=np.array([tensiones,corrientes,error_corrientes,error_tensiones])
-A2=np.transpose(A2)
-A2=A2[A2[:,0].argsort()]
-A2=np.transpose(A2)#dificil de creer pero funciona
-tensiones,corrientes,error_corrientes,error_tensiones=A2
-
-#tensiones=np.array(tensiones)
-#tensiones=tensiones*-1
-#corrientes*=corrientes[24]
-
-plt.plot(tensiones[:-1],corrientes[:-1]*1000,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
-plt.errorbar(tensiones[:-1],corrientes[:-1]*1000,error_corrientes[1:]*1000,linestyle = 'None')
-
-plt.ylabel('Corriente (mA)')
-plt.xlabel('Tensión (V)')
-plt.grid()
 

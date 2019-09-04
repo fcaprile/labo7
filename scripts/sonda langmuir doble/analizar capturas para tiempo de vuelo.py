@@ -1,18 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 13 12:47:22 2019
-
-@author: DG
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Mon May 13 00:05:48 2019
-
-@author: ferchi
-"""
-
-# -*- coding: utf-8 -*-
 """
 Created on Mon Apr  8 15:35:12 2019
 

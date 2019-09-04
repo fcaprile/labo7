@@ -18,6 +18,7 @@ import numpy as np
 import os
 from numpy import genfromtxt
 from scipy.integrate import cumtrapz as integrar
+from scipy.signal import butter, filtfilt
 #plt.clf()
 #plt.close()
 
@@ -181,6 +182,7 @@ for j in range(len(indice)//2):
     tinf=2*10**-6
     tsup=6*10**-6
     R.butcher(tinf,tsup,1)
+    R.filtrar_por_vecinos(200)
     R.filtrar(fc,order)
     #promedio entre 3 y 5 us
     t1=4*10**-6
