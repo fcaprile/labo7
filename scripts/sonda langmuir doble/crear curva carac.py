@@ -9,32 +9,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 import os
 
-def filtrar(data):
-    def butter_lowpass(cutoff, fs, order=5):
-        nyq = 0.5 * fs
-        normal_cutoff = cutoff / nyq
-        b, a = butter(order, normal_cutoff, btype='low', analog=False)
-        return b, a
-    
-    
-    def butter_lowpass_filter(data, cutoff, fs, order=5):
-        b, a = butter_lowpass(cutoff, fs, order=order)
-    #    y = lfilter(b, a, data)
-        y = filtfilt(b, a, data)
-        return y
-    
-    
-    # Filter requirements.
-    order = 5
-    fs = len(data)/(tiempo[-1]-tiempo[0])       # sample rate, Hz
-    fs=1/(tiempo[1]-tiempo[0])
-    cutoff =7*10**4  # desired cutoff frequency of the filter, Hz
-    cutoff=4*10**5
-    b, a = butter_lowpass(cutoff, fs, order)
-    
-    y = butter_lowpass_filter(data, cutoff, fs, order)
-    return(y)
-
 def promediar_vectores(matriz): #formato: filas de vectores
     columnas=len(matriz[0,:])
     filas=len(matriz[:,0])
@@ -51,7 +25,7 @@ def y_dado_x(x,y,valorx):
     pos=posicion_x(x,valorx)
     return y[pos]
 
-def curva_por_carpeta(carpeta_base,tinf,tsup):
+def curva_por_carpeta(carpeta_base,tinf,tsup,filtrarr=Falser):
     indice_carpetas=[]
     for carpeta in os.listdir(carpeta_base):
         indice_carpetas.append(carpeta)
@@ -85,7 +59,7 @@ def curva_por_carpeta(carpeta_base,tinf,tsup):
             data=-R.y/altura_pico_bobina
             descarga_media.append(altura_pico_bobina)
             tiempo=R.x
-            #y=filtrar(data)
+            y=filtrar(data)
             #promedio entre 4 y 5 us
 #            t1=4*10**-6
 #            t2=6*10**-6
@@ -133,8 +107,8 @@ carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-28/'
 #carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/'
 #falta filtrar 6-3
 
-tc,c,tensiones,corrientes,error_tensiones,error_corrientes=curva_por_carpeta(carpeta_base1,4*10**-6,6*10**-6)#,sacar_outliers=True)
-#t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2)#,sacar_outliers=True)
+tc,c,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,4*10**-6,6*10**-6)#,sacar_outliers=True)
+t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,4*10**-6,6*10**-6,filtrar=True)#,sacar_outliers=True)
 #t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3)#,sacar_outliers=True)
 #t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4)#,sacar_outliers=True)
 '''

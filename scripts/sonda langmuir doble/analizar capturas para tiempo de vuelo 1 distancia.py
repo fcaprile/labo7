@@ -200,14 +200,15 @@ def tiempo_vuelo_1_carpeta(carpeta,tinf,tsup,fc,order,reduction=1,punta=10,n_vec
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/'
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23/166/'
-carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/165/'
-carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/175.5/'
-carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
+#carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/165/'
+#carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-28 tiempo vuelo/tiempo vuelo/175.5/'
+#carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
+#carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-4/vuelo/200.5/'
 
-tinf=2*10**-6
-tsup=6*10**-6
+tinf=4*10**-6
+tsup=8*10**-6
   
-vuelos=tiempo_vuelo_1_carpeta(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
+vuelos=tiempo_vuelo_1_carpeta(carpeta_madre,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=False)
 print(vuelos)
 vuelo_medio=np.mean(vuelos)
 print(vuelo_medio,np.std(vuelos)/(np.sqrt(len(vuelos))-1))

@@ -198,47 +198,31 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
 #            if len(pico_resistencia)>0:
                 vuelos.append(resistencia.x[pos_pico_resistencia])
         vuelo_medio.append(np.mean(vuelos))
-        desviación.append(np.std(vuelos)/(np.sqrt(jmax)-1))
+        desviación.append(np.std(vuelos)/(np.sqrt(jmax)))
     return distancias,vuelo_medio,desviación
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
 carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-30 tiempo vuelo/'
-#carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
-#carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28/tiempo vuelo/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-23,28 tiempo vuelo limpias/'
+carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/'
+carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/'
+carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/tiempo vuelo sin outliers/8-30/'
+carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-4/vuelo/'
 
 tinf=2*10**-6
 tsup=6*10**-6
   
 distancias_dia_1,vuelo_medio_dia_1,desviación_dia_1=tiempo_vuelo(carpeta_madre,tinf,tsup,fc=0.7*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50)
 '''
-#funcan: 
-fc=7*10**5,order=4,reduction=0.7                da 6.12638808829e-08
-fc=10*10**5,order=4,reduction=0.5               da 4.03203424136e-08
-fc=7*10**5,order=4,reduction=1                  da 4.04528670502e-08
-fc=10*10**5,order=4,reduction=1                 da 2.74604102974e-08
-fc=10*10**5,order=4,reduction=1 sin butcher     da 5.61846018492e-08
-fc=4*10**5,order=2,reduction=1 sin butcher      da 5.85702501558e-08
-fc=4*10**5,order=2,reduction=0.7                da 1.85755454758e-08
-fc=20*10**5,order=2,reduction=0.5               da 1.56990215733e-08
-fc=7*10**5,order=2,reduction=0.8 feo ajuste     da 3.113408864136538e-08
-fc=2*10**5,order=2,reduction=0.5                da 1.2561231684271965e-08
-fc=2*10**5,order=5,reduction=0.5                da 1.646924319122793e-08
-
 np.savetxt('tiempos de vuelo.txt',[distancias,vuelo_medio,desviación], delimiter='\t')
-
-
-limpias y bien pensadas:
-fc=1*10**5,order=4                  2.4864546887924663e-08
-fc=1.5*10**5                        3.298788135324044e-08
-fc=1*10**5,order=2                  2.979818679696833e-08
 '''
 
 distancias_dia_1=np.array(distancias_dia_1)
 vuelo_medio_dia_1=np.array(vuelo_medio_dia_1)
 desviación_dia_1=np.array(desviación_dia_1)
 
-distancias_dia_2,vuelo_medio_dia_2,desviación_dia_2=tiempo_vuelo(carpeta_madre2,tinf,tsup,fc=0.7*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50,invert=True)
+distancias_dia_2,vuelo_medio_dia_2,desviación_dia_2=tiempo_vuelo(carpeta_madre2,2*tinf,4*tinf,fc=0.7*10**5,order=4,reduction=0.8,punta=10,n_vecinos=50,invert=False)
 #%%
 distancias2=np.array(distancias_dia_2)
 vuelo_medio2=np.array(vuelo_medio_dia_2)#-2.95*10**-6
@@ -257,7 +241,7 @@ distancias,vuelo_medio,desviación=np.loadtxt('tiempos de vuelo.txt', delimiter=
 '''
 
 f=lambda  x,A,y0:A*x+y0
-parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=True) 
+parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=False)#yo lo tenia hecho con true, con el cual da +-0.2
 
 print(parametros_optimizados[0],'+-',np.sqrt(matriz_covarianza[0,0]))   
 plt.rcParams['font.size']=20#tamaño de fuente
