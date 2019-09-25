@@ -137,7 +137,7 @@ plt.clf()
 plt.close()
 
 carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-4/carac/'
+carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25/'#carac/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
     indice_carpetas.append(archivo)
@@ -146,11 +146,11 @@ for archivo in os.listdir(carpeta_base):
 num=-1
 '''
 
-num+=1
-#volt=26
-#carpeta=carpeta_base+str(volt)+'/'
-carpeta=carpeta_base+indice_carpetas[num]+'/'
-print(indice_carpetas[num])
+#num+=1
+volt=59.9
+carpeta=carpeta_base+str(volt)+'/'
+#carpeta=carpeta_base+indice_carpetas[num]+'/'
+#print(indice_carpetas[num])
 indice=[]
 for archivo in os.listdir(carpeta):
     if archivo.endswith(".csv"):
@@ -176,7 +176,7 @@ for j in range(len(indice)//2):
     R.x-=tiempo0
     data=-R.y/altura_pico_bobina
     tiempo=R.x
-    fc=0.7*10**5
+    fc=1.5*10**5
     order=4
     plt.plot(R.x,R.y,'r')
     tinf=2*10**-6

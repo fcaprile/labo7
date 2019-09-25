@@ -36,7 +36,7 @@ def ajustar_entre(f,x,y,ey,xinf,xsup,escalax=1,escalay=1,color='g',label='Ajuste
     y=y[a:b]
     x=x[a:b]
     ey=ey[a:b]
-    popt, pcov = curve_fit(f,x,y,sigma =ey)
+    popt, pcov = curve_fit(f,x,y,sigma =ey,absolute_sigma=True)
     if plot==True:
         xx=np.linspace(min(x),max(x),1000)                    
         plt.plot(xx*escalax,f(xx, *popt)*escalay, color=color, label = label)#los popt son los valores de las variables fiteadas que usara la funcion f                      
@@ -137,7 +137,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
         plt.xlabel('Tensión (V)')
         plt.grid()
     
-        x_plot=np.linspace(tensiones[0],0,100)
+        x_plot=np.linspace(0,tensiones[-1],100)
         plt.plot(x_plot,f(x_plot,*par_sat)*1000,'r')
     #        x_plot=np.linspace(sat,tensiones[-1],100)
     #        plt.plot(x_plot,f(x_plot,*par_sat)*1000,'g',label='Puntos usadoss para el ejuste')
@@ -147,7 +147,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
         
         
 #%%
-tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 4 y 6.txt',delimiter='\t')
+tensiones,corrientes,error_corrientes=np.loadtxt('curva carac cerca 1000V con t entre 0,5 y 1.txt',delimiter='\t')
 #analisis_simetrico_rama_pos(tensiones,corrientes,error_corrientes,0,10,30)
 
 #%%  Corro la funcion para analizar
@@ -163,8 +163,8 @@ tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 
 #tensiones=np.delete(tensiones,7)#si es .np
 #corrientes=np.delete(corrientes,7)#si es .np
 #error_corrientes=np.delete(error_corrientes,7)#si es .np
-#corrientes=-corrientes   
+corrientes=-corrientes   
 
 corrientes-=y_dado_x(tensiones,corrientes,0)    
-analisis_simetrico(tensiones,corrientes,error_corrientes,-20,00,-60,-35)    
+analisis_simetrico(tensiones,corrientes,error_corrientes,0,20,25,50)    
  
