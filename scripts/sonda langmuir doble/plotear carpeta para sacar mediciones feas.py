@@ -138,6 +138,7 @@ plt.close()
 
 carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
 carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25/'#carac/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'#carac/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
     indice_carpetas.append(archivo)

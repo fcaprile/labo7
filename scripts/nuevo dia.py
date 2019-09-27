@@ -10,8 +10,8 @@ import time
 #path='C:/Users/Admin/Desktop/labo6_Rosenberg_Caprile/mediciones/'
 #path='C:/Users/Admin/Desktop/labo6_Rosenberg_Caprile/mediciones/'
 #day=str(time.localtime()[1])+'-'+str(time.localtime()[2])
-carpeta='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25 neg/'
-voltajes=np.array([0.001,3,6,9,12,15.1,18.1,18,21,24])*-1
+carpeta='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'
+voltajes=np.array([54,49.5,43.5,40,37.5,35,31,22])
 for i in voltajes:
     os.mkdir(carpeta+str(i)+'/')
 

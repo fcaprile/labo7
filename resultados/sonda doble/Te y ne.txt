@@ -1,0 +1,4 @@
+Te ruidosa negativa entre -60 y -15 da 11.9+-0.5
+Te linda positiva entre 25 y 60 da 4.6+-1.0
+
+ne con la rama positiva da 2.73*10**19
