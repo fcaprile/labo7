@@ -130,19 +130,19 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
     if plot==True:
         plt.rcParams['font.size']=20#tamaño de fuente
         plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
-        plt.plot(tensiones,corrientes*1000,'b*')
-        plt.errorbar(tensiones,corrientes*1000,error_corrientes*1000,linestyle = 'None')
+        plt.plot(tensiones,corrientes,'r*',label='Normal')
+        plt.errorbar(tensiones,corrientes,error_corrientes,linestyle = 'None')
         if rama_pos==True:
             x_plot=np.linspace(0,tensiones[-1],100)
         else:
             x_plot=np.linspace(tensiones[1],0,100)
             
-        plt.plot(x_plot,f(x_plot,*par_sat)*1000,'r')
+        plt.plot(x_plot,f(x_plot,*par_sat),'r')
     #        x_plot=np.linspace(sat,tensiones[-1],100)
     #        plt.plot(x_plot,f(x_plot,*par_sat)*1000,'g',label='Puntos usadoss para el ejuste')
         
         x_plot=np.linspace(lin_neg,lin_pos,100)
-        plt.plot(x_plot,f(x_plot,*par_lin)*1000,'g')
+        plt.plot(x_plot,f(x_plot,*par_lin),'g')
         
         
 #%%
@@ -168,7 +168,8 @@ corrientes-=y_dado_x(tensiones,corrientes,0)
 analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,25,60,rama_pos=True)    
 analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,-60,-15,rama_pos=False)    
 plt.subplots_adjust(left=0.19, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
-plt.ylabel('Corriente (mA)')
+plt.ylabel('Corriente (A)')
 plt.xlabel('Tensión (V)')
 plt.grid()
+plt.legend(loc = 'best') 
  

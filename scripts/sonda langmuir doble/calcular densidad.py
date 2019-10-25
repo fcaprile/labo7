@@ -5,7 +5,7 @@ Created on Wed Aug 14 10:44:59 2019
 @author: DG
 """
 import numpy as np
-Ii0=0.23
+Ii0=0.087
 Te=4.6*1.6*10**-19
 mn=1.67*10**-27
 mf=19*mn
