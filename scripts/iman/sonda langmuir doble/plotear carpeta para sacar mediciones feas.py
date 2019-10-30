@@ -139,6 +139,8 @@ plt.close()
 carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
 carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva/'
 carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
+carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/10-25/'
+carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/filtrar/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
     indice_carpetas.append(archivo)
@@ -147,10 +149,10 @@ for archivo in os.listdir(carpeta_base):
 num=-1
 '''
 
-num+=1
-volt=38.2
-#carpeta=carpeta_base+str(volt)+'/'
-carpeta=carpeta_base+indice_carpetas[num]+'/'
+#num+=1
+volt=62
+carpeta=carpeta_base+str(volt)+'/'
+#carpeta=carpeta_base+indice_carpetas[num]+'/'
 print(indice_carpetas[num])
 indice=[]
 for archivo in os.listdir(carpeta):
@@ -169,7 +171,7 @@ plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, h
 for j in range(len(indice)//2):
     R=Csv(carpeta,2*j+1,punta=10)
     bobina=Csv(carpeta,2*j,es_bobina=True)
-    plt.plot(bobina.x,bobina.y)
+    plt.plot(bobina.x,bobina.y*0.01)
     bobina.sacar_lineal()
     pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=100,valle=True)[0]
     tiempo0=bobina.x[pico_bobina]
@@ -179,7 +181,7 @@ for j in range(len(indice)//2):
     R.y/=5
 #    data=R.y
     tiempo=R.x
-    fc=3*10**5
+    fc=1*10**5
     order=4
     plt.plot(R.x,R.y,'r')
     tinf=2*10**-6
@@ -188,16 +190,16 @@ for j in range(len(indice)//2):
 #    R.filtrar_por_vecinos(200)
     R.filtrar(fc,order)
     #promedio entre 3 y 5 us
-    t1=0.5*10**-6
-    t2=1.5*10**-6
+    t1=1*10**-6
+    t2=2.5*10**-6
     pos1=posicion_x(tiempo,t1)
     pos2=posicion_x(tiempo,t2)
-#    plt.plot(R.x,R.y,'b')
+    plt.plot(R.x,R.y,'b')
 #    plt.plot(bobina.x,bobina.y*0.02,'g')
     pico_corriente=R.encontrar_picos(0.3,distancia_entre_picos=100,valle=False)[0]
     valor=R.y[pico_corriente]
 
-#    valor=np.mean(R.y[pos1:pos2])
+    valor=np.mean(R.y[pos1:pos2])
     print('medicion',j,'dio',valor)
 #    plt.plot(tiempo,data)
     corrientes.append(valor/altura_pico_bobina)
