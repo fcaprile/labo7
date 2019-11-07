@@ -179,6 +179,7 @@ carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/t
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/178/'
 carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/156/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/156/'
 tinf=2*10**-6
 tsup=6*10**-6
 '''

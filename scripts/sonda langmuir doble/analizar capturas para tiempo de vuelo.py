@@ -183,7 +183,7 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
 #            if len(pico_resistencia)>0:
                 vuelos.append(resistencia.x[pos_pico_resistencia])
         vuelo_medio.append(np.mean(vuelos))
-        desviación.append(np.std(vuelos)/(np.sqrt(jmax)))
+        desviación.append(np.std(vuelos)/(np.sqrt(jmax)-1))
     return distancias,vuelo_medio,desviación
 #%%
 #carpeta='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
@@ -194,6 +194,10 @@ carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/'
 carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/tiempo vuelo sin outliers/8-30/'
 carpeta_madre2='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-4/vuelo/'
+
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/'
+carpeta_madre2='C:/Users/ferchi/Desktop/github/labo7/mediciones/9-4/vuelo/'
+
 
 tinf=2*10**-6
 tsup=6*10**-6
@@ -232,13 +236,13 @@ print(parametros_optimizados[0],'+-',np.sqrt(matriz_covarianza[0,0]))
 plt.rcParams['font.size']=20#tamaño de fuente
 plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
 plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
-plt.plot(distancias-min(distancias),f(distancias, *parametros_optimizados)*10**6, 'g-', label = 'Ajuste')
+plt.plot(distancias-min(distancias),f(distancias, *parametros_optimizados)*10**6, 'g-')
 plt.plot(distancias-min(distancias),vuelo_medio*10**6,'b*')
 plt.errorbar(distancias-min(distancias),vuelo_medio*10**6,desviación*10**6,linestyle = 'None')
 plt.grid(True) # Para que quede en hoja cuadriculada
 plt.xlabel('Distancia (mm)')
 plt.ylabel('Tiempo de vuelo (us)')
-plt.legend(loc = 'best') 
+plt.legend(loc = 'upper left') 
 
 #print(np.mean(vuelo),'+-',np.std(vuelo)/np.mean(vuelo))
 #plt.plot(distancias2-min(distancias),vuelo_medio2*10**6-3,'b*')
