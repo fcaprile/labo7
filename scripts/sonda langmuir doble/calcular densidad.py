@@ -20,3 +20,4 @@ v=np.sqrt(Te/mc)/3+2*np.sqrt(Te/mf)/3
 ne=Ii0/0.61/e/A/v
 
 print(ne)
+    

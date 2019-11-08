@@ -100,7 +100,7 @@ for i in range(N):
     disparos+=1
     if elapsed>2.5 and i>0:
         fallidos+=np.floor(elapsed/1.7)-1
-
+#    print('Hubo '+str(disparos)+' disparos,'+str(fallidos)+' fallos',end="\r")
     if i%100==0 and i!=0:
         print('Se realizaron',disparos,'mediciones,',fallidos,'salieron mal')
     
@@ -140,7 +140,8 @@ for i in range(disparos):
 plt.plot(corrientes)
 print(np.mean(corrientes))
 '''
-np.savetxt(str(disparos)+' descargas-'+str(time.localtime()[0])+'-'+str(time.localtime()[1])+'-'+str(time.localtime()[2])+'-'+str(time.localtime()[3])+'-'+str(time.localtime()[4])+'.txt',[corrientes,ts], fmt='%.18g', delimiter='\t', newline=os.linesep)
+carpeta='C:/Users/DG/Documents/GitHub/labo7/scripts/iman/'
+np.savetxt(carpeta+str(disparos)+' descargas-'+str(time.localtime()[0])+'-'+str(time.localtime()[1])+'-'+str(time.localtime()[2])+'-'+str(time.localtime()[3])+'-'+str(time.localtime()[4])+'.txt',[corrientes,ts], fmt='%.18g', delimiter='\t', newline=os.linesep)
 
 print('Hubo',disparos,'disparos y',fallidos,'descargas fallidas')
 print('La efectividad fue del',"%.1f" %(disparos/(disparos+fallidos)*100),'%')
