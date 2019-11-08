@@ -113,9 +113,9 @@ class Csv(Data):
             super().sacar_offset(50)
             super().calibrar_bobina()
             
-    def plot(self,fig_num=0,escala=1,tamañox=14,tamañoy=10,color='b-'):
+    def plot(self,fig_num=0,escala=1,tamañox=14,tamañoy=10,color='b-',label='None'):
         plt.figure(num= fig_num , figsize=(tamañox, tamañoy), dpi=80, facecolor='w', edgecolor='k')        
-        plt.plot(self.x,self.y*escala,color)
+        plt.plot(self.x,self.y*escala,color,label=label)
         plt.grid(True) # Para que quede en hoja cuadriculada
         plt.xlabel('Tiempo (s)')
         plt.ylabel('Tension (V)')
@@ -145,32 +145,39 @@ def tiempo_vuelo_1_medicion(carpeta,medicion,tinf,tsup,fc,order,reduction=1,punt
     bobina=Csv(carpeta,2*j,es_bobina=True)
     resistencia=Csv(carpeta,2*j+1,punta=punta)
     #resistencia.y-=ruido
-    resistencia.filtrar_por_vecinos(n_vecinos)
+#    resistencia.filtrar_por_vecinos(n_vecinos)
     bobina.sacar_lineal()
     pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
     tiempo0=bobina.x[pico_bobina]
 #    print(tiempo0)
+    plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
     bobina.x-=tiempo0
     resistencia.x-=tiempo0
     if invert==True:
         resistencia.y*=-1
-    plt.plot(resistencia.x,resistencia.y,'b')
+    plt.plot(bobina.x*10**6,bobina.y,'b-',label='Descarga (A)')
+    plt.plot(resistencia.x*10**6,resistencia.y/180*1000*10,'r',label='Sonda*10 (mA)')
     
     resistencia.butcher(tinf,tsup,1)
-    plt.plot(resistencia.x,resistencia.y,'r')
+#    plt.plot(resistencia.x,resistencia.y,'r')
     resistencia.filtrar(fc,order)
-    bobina.plot(fig_num=1,escala=0.01,tamañox=14,tamañoy=6,color='b-')
+    plt.rcParams['font.size']=14#tamaño de fuente
+    plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
+    plt.xlabel('Tiempo (us)')
+    plt.ylabel('Corriente')
 #    resistencia.plot(fig_num=1,escala=100,tamañox=14,tamañoy=10,color='r-')
-    
+    plt.grid(True) # Para que quede en hoja cuadriculada
+
     bottom=posicion_x(resistencia.x,tinf)
     upper=posicion_x(resistencia.x,tsup)
     pico_resistencia=detect_peaks(resistencia.y,0.8*max(resistencia.y),100,show=False)     
-    plt.plot(resistencia.x,resistencia.y,'g')
+    plt.plot(resistencia.x*10**6,resistencia.y/180*1000*10,'g',label='Sonda filtrada*10 (mA)')
     if len(pico_resistencia)>0:
         pos_pico_resistencia=pico_resistencia[0]#+bottom
         vuelo=resistencia.x[pos_pico_resistencia]
     else:
         vuelo=0
+    plt.legend(loc = 'best') 
     return vuelo
 #%%
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/166/'
@@ -179,13 +186,13 @@ carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-28 tiempo vuelo/t
 carpeta_madre='C:/Users/DG/Documents/GitHub/labo7/mediciones/8-30 tiempo vuelo/178/'
 carpeta_madre='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-30 tiempo vuelo/189.5/'
 carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/8-23/156/'
-carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/156/'
+carpeta_madre='C:/Users/ferchi/Desktop/github/labo7/mediciones/tiempo vuelo sin outliers/8-23,28/174.5/'
 tinf=2*10**-6
 tsup=6*10**-6
 '''
 j=-1
 '''
-j+=1
+#j+=1
 vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50)
 #vuelo=tiempo_vuelo_1_medicion(carpeta_madre,j,tinf,tsup,fc=1*10**5,order=4,reduction=0.8 ,punta=10,n_vecinos=50,invert=True)
 
