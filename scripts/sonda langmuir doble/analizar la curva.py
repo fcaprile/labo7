@@ -125,12 +125,12 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
     Error_Te=np.sqrt(cov_lin[0,0]*par_sat[0]**2/(2*par_lin[0]**2)**2+cov_sat[1,1]/(2*par_lin[0])**2)
     
     Te=1/2/par_lin[0]*par_sat[1]
-    print('A orden simetrico, Te=',Te,'+-',Error_Te)
+    print('A orden simetrico, Te=',Te,'+-',Error_Te,'y Ii0=',par_sat[1],'+-',cov_sat[1,1])
     
     if plot==True:
         plt.rcParams['font.size']=20#tamaño de fuente
         plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
-        plt.plot(tensiones,corrientes,'r*',label='Normal')
+        plt.plot(tensiones,corrientes,'b*',label='Normal')
         plt.errorbar(tensiones,corrientes,error_corrientes,linestyle = 'None')
         if rama_pos==True:
             x_plot=np.linspace(0,tensiones[-1],100)
@@ -147,6 +147,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
         
 #%%
 tensiones,corrientes,error_corrientes=np.loadtxt('curva carac cerca 1000V con t entre 0,5 y 1.txt',delimiter='\t')
+#tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 4 y 5.txt',delimiter='\t')
 #analisis_simetrico_rama_pos(tensiones,corrientes,error_corrientes,0,10,30)
 
 #%%  Corro la funcion para analizar
@@ -166,10 +167,10 @@ corrientes=-corrientes
 
 corrientes-=y_dado_x(tensiones,corrientes,0)    
 analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,25,60,rama_pos=True)    
-analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,-60,-15,rama_pos=False)    
+#analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,-60,-20,rama_pos=False)    
 plt.subplots_adjust(left=0.19, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
 plt.ylabel('Corriente (A)')
 plt.xlabel('Tensión (V)')
 plt.grid()
-plt.legend(loc = 'best') 
+#plt.legend(loc = 'best') 
  

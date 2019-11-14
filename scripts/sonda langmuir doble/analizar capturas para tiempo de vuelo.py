@@ -11,6 +11,8 @@ from numpy import genfromtxt
 from scipy.integrate import cumtrapz as integrar
 from scipy.signal import butter, filtfilt
 from scipy.optimize import curve_fit
+from uncertainties import ufloat
+from scipy.stats import chi2
 #plt.clf()
 #plt.close()
 
@@ -158,7 +160,7 @@ def tiempo_vuelo(carpeta_madre,tinf,tsup,fc,order,reduction=1,punta=10,n_vecinos
             bobina=Csv(carpeta,2*j,es_bobina=True)
             resistencia=Csv(carpeta,2*j+1,punta=punta)
             #resistencia.y-=ruido
-            resistencia.filtrar_por_vecinos(n_vecinos)
+#            resistencia.filtrar_por_vecinos(n_vecinos)
             bobina.sacar_lineal()
             pico_bobina=bobina.encontrar_picos(0.8,distancia_entre_picos=200,valle=True)[0]
             altura_pico_bobina=bobina.y[pico_bobina]
@@ -228,11 +230,36 @@ desviación=np.concatenate((desviación_dia_1,desviación2), axis = 0)
 '''
 distancias,vuelo_medio,desviación=np.loadtxt('tiempos de vuelo.txt', delimiter='\t')
 '''
-
+distancias/=1000
 f=lambda  x,A,y0:A*x+y0
-parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación+10**-8,absolute_sigma=False)#yo lo tenia hecho con true, con el cual da +-0.2
+parametros_optimizados, matriz_covarianza = curve_fit(f,distancias,vuelo_medio,sigma = desviación,absolute_sigma=False)#yo lo tenia hecho con true, con el cual da +-0.2
 
-print(parametros_optimizados[0],'+-',np.sqrt(matriz_covarianza[0,0]))   
+t_vuelo=ufloat(parametros_optimizados[0],np.sqrt(matriz_covarianza[0,0]))
+vel=1/t_vuelo
+print(vel)
+
+def test_chi2(f,x,y,ey,parametros_ajustados=[]):
+    '''
+    f es la fucnion con la que ajustaste, x,y lo que mediste y ey el error con el que lo mediste 
+    (si no te pusiste a caracterizar el error lee abajo la parte de desviacion standard)
+    parametros_ajustados son los valores que te da el ajuste
+    '''
+    n=len(parametros_ajustados)
+    N=len(y)
+    if n==0: #si la f no viene de un ajuste
+        t=np.sum(((y-f(x))/ey)**2) #t es el nombre teorico que se le da al resultado de esa cuenta, no tiene nada que ver con el tiempo
+    else:
+        t=np.sum(((y-f(x,*parametros_ajustados))/ey)**2)
+        #para ser rigurosos, esto funciona si f es lineal en los parámetros (no la definiste como algo que depende de A**2), pero bue
+    
+    p_valor=1-chi2.cdf(t,N-n)
+    return p_valor,t    
+    
+
+
+print(test_chi2(f,distancias,vuelo_medio,abs(desviación),parametros_optimizados))                                                     
+#print(parametros_optimizados[0],'+-',np.sqrt(matriz_covarianza[0,0]))   
+#print(parametros_optimizados[1],'+-',np.sqrt(matriz_covarianza[1,1]))   
 plt.rcParams['font.size']=20#tamaño de fuente
 plt.figure(num=0, figsize=(9,6), dpi=80, facecolor='w', edgecolor='k')
 plt.subplots_adjust(left=0.14, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
