@@ -137,7 +137,7 @@ plt.clf()
 plt.close()
 
 carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25/'#carac/'
+carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/'#carac/'
 #carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'#carac/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
@@ -147,11 +147,11 @@ for archivo in os.listdir(carpeta_base):
 num=-1
 '''
 
-#num+=1
-volt=59.9
-carpeta=carpeta_base+str(volt)+'/'
-#carpeta=carpeta_base+indice_carpetas[num]+'/'
-#print(indice_carpetas[num])
+num+=1
+#volt=59.9
+#carpeta=carpeta_base+str(volt)+'/'
+carpeta=carpeta_base+indice_carpetas[num]+'/'
+print(indice_carpetas[num])
 indice=[]
 for archivo in os.listdir(carpeta):
     if archivo.endswith(".csv"):
@@ -175,40 +175,42 @@ for j in range(len(indice)//2):
     altura_pico_bobina=bobina.y[pico_bobina]
     bobina.x-=tiempo0
     R.x-=tiempo0
-    data=-R.y/altura_pico_bobina
+    R.y/=altura_pico_bobina
+    R.y*=-1
     tiempo=R.x
     fc=1.5*10**5
     order=4
-    plt.plot(R.x,R.y,'r')
-    tinf=2*10**-6
-    tsup=6*10**-6
-    R.butcher(tinf,tsup,1)
-    R.filtrar_por_vecinos(200)
+    plt.plot(R.x,R.y*2000,'r')
+    t1=2*10**-6
+    t2=4*10**-6
+    R.butcher(t1,t2,1)
+    R.filtrar_por_vecinos(20)
     R.filtrar(fc,order)
     #promedio entre 3 y 5 us
-    t1=4*10**-6
-    t2=6*10**-6
     pos1=posicion_x(tiempo,t1)
     pos2=posicion_x(tiempo,t2)
-    plt.plot(R.x,R.y,'b')
+    plt.plot(R.x,R.y*2000,'b')
     plt.plot(bobina.x,bobina.y*0.01,'g')
 
-    valor=np.mean(data[pos1:pos2])
+    valor=np.mean(R.y[pos1:pos2])
 #    print('medicion',j,'dio',valor)
 #    plt.plot(tiempo,data)
     corrientes.append(valor)
     alturas_picos.append(altura_pico_bobina)
-    datas[j,:]=data
-    tiempos[j,:]=tiempo
+#    datas[j,:]=data
+#    tiempos[j,:]=tiempo
 
 
 
 altura_media_pico_bobina=np.mean(np.array(alturas_picos))    
 #altura_media_pico_bobina=-568
-media=np.mean(corrientes)*altura_media_pico_bobina
+corrientes=np.array(corrientes)
+corrientes*=altura_media_pico_bobina
+media=np.mean(corrientes)
 print(media)
 corrientes=np.array(corrientes)
 for i in range(len(corrientes)):
-    if abs(corrientes[i]*altura_media_pico_bobina-media)>abs(media*0.4):
-        print('medicion',indice[2*i],'esta lejos')
+    print('medicion',i,'dio',corrientes[i])
+#    if abs(corrientes[i]*altura_media_pico_bobina-media)>abs(media*0.4):
+#        print('medicion',indice[2*i],'esta lejos')
 #plt.hist(corrientes)

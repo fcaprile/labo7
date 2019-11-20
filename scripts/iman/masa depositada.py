@@ -60,7 +60,12 @@ def medir_trigger(t0):
             r='1\n'
     elapsed = time.time() - t0
     t = time.time()
-    data1=osci.query_binary_values('CURV?', datatype='B',container=np.array)
+    while True:
+        try:
+            data1=osci.query_binary_values('CURV?', datatype='B',container=np.array)
+            break
+        except:
+            print('La conección estuvo chonga')
     return data1,elapsed,t
 
 def medir(ch):
