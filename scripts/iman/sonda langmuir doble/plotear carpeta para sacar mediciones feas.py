@@ -136,11 +136,11 @@ def posicion_x(x,valorx):
 plt.clf()
 plt.close()
 
-carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/10-25/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/filtrar/'
+carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/config 2/10-25/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/10-25/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/filtrar/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
     indice_carpetas.append(archivo)
@@ -149,10 +149,10 @@ for archivo in os.listdir(carpeta_base):
 num=-1
 '''
 
-#num+=1
-volt=62
-carpeta=carpeta_base+str(volt)+'/'
-#carpeta=carpeta_base+indice_carpetas[num]+'/'
+num+=1
+#volt=62
+#carpeta=carpeta_base+str(volt)+'/'
+carpeta=carpeta_base+indice_carpetas[num]+'/'
 print(indice_carpetas[num])
 indice=[]
 for archivo in os.listdir(carpeta):

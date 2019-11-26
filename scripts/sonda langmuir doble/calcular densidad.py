@@ -7,13 +7,12 @@ Created on Wed Aug 14 10:44:59 2019
 import numpy as np
 from uncertainties import ufloat
 
-e=1.6*10**-19
 
 #Ii0=ufloat(0.087)
 
 '''
 valores para cerca sin iman
-Ii0=ufloat(0.2325,0.0025) 
+Ii0=ufloat(0.2325,0.0025**0.5) 
 Te=ufloat(4.6*e,1*e)
 '''
 
@@ -29,7 +28,21 @@ Ii0=ufloat(0.002,0.0001)
 Te=ufloat(6*e,1*e)
 '''
 
+'''
+valores para config 2
+Ii0=ufloat(0.1627,0.0054**0.5) 
+Te=ufloat(5.6*e,2.5*e)
+'''
 
+
+'''
+valores para config 3
+Ii0=ufloat(0.107,0.0024**0.5) 
+Te=ufloat(6*e,3*e)
+'''
+
+
+e=1.6*10**-19
 mn=1.67*10**-27
 mf=19*mn
 mc=12*mn

@@ -161,7 +161,7 @@ def analisis_simetrico(tensiones,corrientes,error_corrientes,lin_neg,lin_pos,sat
         
         
 #%%
-tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 1 y 3 config 2.txt',delimiter='\t')
+tensiones,corrientes,error_corrientes=np.loadtxt('curva carac cerca 1000V config 3 con t entre 2 y 4.txt',delimiter='\t')
 #analisis_simetrico_rama_pos(tensiones,corrientes,error_corrientes,0,10,30)
 
 #%%  Corro la funcion para analizar
@@ -180,12 +180,10 @@ tensiones,corrientes,error_corrientes=np.loadtxt('curva carac 1000V con t entre 
 #corrientes=-corrientes   
 
 corrientes-=y_dado_x(tensiones,corrientes,0)    
-analisis_simetrico(tensiones,corrientes,error_corrientes,0,26,30,60,rama_pos=True)    
+analisis_simetrico(tensiones,corrientes,error_corrientes,0,40,35,60,rama_pos=True)    
 #analisis_simetrico(tensiones,corrientes,error_corrientes,-20,20,-60,-15,rama_pos=False)    
 plt.subplots_adjust(left=0.19, bottom=0.13, right=0.98, top=0.98, wspace=None, hspace=None)
 plt.ylabel('Corriente (mA)')
 plt.xlabel('Tensión (V)')
 plt.grid()
-
-
  

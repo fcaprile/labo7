@@ -220,8 +220,10 @@ def vector_entre(x,xinf,xsup):
 #carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-30/'
 #carpeta_base3='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
 #carpeta_base4='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/no filtrar/'
-carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/filtrar/'
-carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/no filtrar/'
+#carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/filtrar/'
+#carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/config 2/no filtrar/'
+carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/config 2/filtrar/'
+carpeta_base2='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/config 2/no filtrar/'
 
 fc=1*10**5
 order=4
@@ -254,7 +256,7 @@ tensiones,corrientes,error_corrientes,error_tensiones=A2
 #tensiones=np.array(tensiones)
 #tensiones=tensiones*-1
 #corrientes*=corrientes[24]
-corrientes*=-1
+#corrientes*=-1
 plt.plot(tensiones,corrientes,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
 plt.errorbar(tensiones,corrientes,error_corrientes,linestyle = 'None')
 

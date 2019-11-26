@@ -209,10 +209,13 @@ def vector_entre(x,xinf,xsup):
 #%%
 #analizo
 carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-28/'
-carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-20/'
-carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25/'
-carpeta_base3='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25 neg/'
-carpeta_base4='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'
+carpeta_base2='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/9-25/'
+carpeta_base3='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/9-25 neg/'
+carpeta_base4='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/9-27/'
+#carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-20/'
+#carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25/'
+#carpeta_base3='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-25 neg/'
+#carpeta_base4='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'
 #falta filtrar 6-3
 fc=0.7*10**5
 order=4
@@ -221,10 +224,10 @@ order=4
 tmin=0.1*10**-7
 tmax=1*10**-6
 
-tc,c,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,tmin,tmax,filtrar=False)#,sacar_outliers=True)
-t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,tmin,tmax,filtrar=False)#,sacar_outliers=True)
-t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3,tmin,tmax,filtrar=False)#,sacar_outliers=True)
-t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4,tmin,tmax,filtrar=False)#,sacar_outliers=True)
+tc,c1,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,tmin,tmax,fc,filtrar=True)#,sacar_outliers=True)
+t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,tmin,tmax,fc,filtrar=True)#,sacar_outliers=True)
+t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3,tmin,tmax,fc,filtrar=True)#,sacar_outliers=True)
+t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4,tmin,tmax,fc,filtrar=True)#,sacar_outliers=True)
 '''
 np.savetxt('curva carac cerca 1000V con t entre 0,5 y 1.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
 tensiones,corrientes,error_tensiones,error_corrientes=np.loadtxt('curva carac 800V final.txt',delimiter='\t')

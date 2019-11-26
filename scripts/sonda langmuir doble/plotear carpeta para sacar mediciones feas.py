@@ -136,8 +136,8 @@ def posicion_x(x,valorx):
 plt.clf()
 plt.close()
 
-carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/curva carac 8-28 limpias/'
-carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/'#carac/'
+carpeta_base='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/11-20/filtrar/'
+#carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/'#carac/'
 #carpeta_base='C:/Users/DG/Documents/GitHub/labo7/mediciones/9-27/'#carac/'
 indice_carpetas=[]
 for archivo in os.listdir(carpeta_base):
@@ -147,11 +147,11 @@ for archivo in os.listdir(carpeta_base):
 num=-1
 '''
 
-num+=1
-#volt=59.9
-#carpeta=carpeta_base+str(volt)+'/'
-carpeta=carpeta_base+indice_carpetas[num]+'/'
-print(indice_carpetas[num])
+#num+=1
+volt=28
+carpeta=carpeta_base+str(volt)+'/'
+#carpeta=carpeta_base+indice_carpetas[num]+'/'
+#print(indice_carpetas[num])
 indice=[]
 for archivo in os.listdir(carpeta):
     if archivo.endswith(".csv"):

@@ -130,7 +130,7 @@ def y_dado_x(x,y,valorx):
     pos=posicion_x(x,valorx)
     return y[pos]
 
-def curva_por_carpeta(carpeta_base,tinf,tsup,filtrar=False):
+def curva_por_carpeta(carpeta_base,tinf,tsup,fc,filtrar=False):
     indice_carpetas=[]
     for carpeta in os.listdir(carpeta_base):
         indice_carpetas.append(carpeta)
@@ -163,7 +163,6 @@ def curva_por_carpeta(carpeta_base,tinf,tsup,filtrar=False):
             altura_pico_bobina=bobina.y[pico_bobina]
             bobina.x-=tiempo0
             R.x-=tiempo0
-            data=-R.y/altura_pico_bobina
 #            print(altura_pico_bobina)
             descarga_media.append(altura_pico_bobina)
             tiempo=R.x
@@ -176,7 +175,7 @@ def curva_por_carpeta(carpeta_base,tinf,tsup,filtrar=False):
 #            t2=6*10**-6
             pos1=posicion_x(tiempo,tinf)
             pos2=posicion_x(tiempo,tsup)
-            corr=np.mean(data[pos1:pos2])
+            corr=np.mean(R.y[pos1:pos2])/(-altura_pico_bobina)/5
             corrientes.append(corr)
             corrientes_esta_carpeta.append(corr)
             #restar caida sobre resistencia
@@ -184,9 +183,9 @@ def curva_por_carpeta(carpeta_base,tinf,tsup,filtrar=False):
             tensiones.append(V)
             tensiones_esta_carpeta.append(V)
 #        print(np.mean(descarga_media))
-        corriente_media.append(np.mean(corrientes_esta_carpeta)/5)        
+        corriente_media.append(np.mean(corrientes_esta_carpeta))        
         tension_media.append(np.mean(tensiones_esta_carpeta))        
-        error_corriente_media.append(np.std(corrientes_esta_carpeta)/5/np.sqrt(len(corrientes_esta_carpeta)))
+        error_corriente_media.append(np.std(corrientes_esta_carpeta)/np.sqrt(len(corrientes_esta_carpeta)))
         error_tension_media.append(np.std(tensiones_esta_carpeta)/np.sqrt(len(corrientes_esta_carpeta)))
         print('Carpeta',i,'analizada!')
     corriente_media=np.array(corriente_media)
@@ -218,9 +217,10 @@ def vector_entre(x,xinf,xsup):
 
 #%%
 #analizo
-carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/8-28/'
-carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/filtrar/'
-carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/no filtrar/'
+carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/11-20/filtrar/'
+carpeta_base2='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/11-20/no filtrar/'
+#carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/filtrar/'
+#carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/11-20/no filtrar/'
 #falta filtrar 6-3
 fc=0.7*10**5
 order=4
@@ -229,12 +229,12 @@ order=4
 tmin=2*10**-7
 tmax=4*10**-6
 
-tc,c,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,tmin,tmax,filtrar=True)#,sacar_outliers=True)
-t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,tmin,tmax,filtrar=False)#,sacar_outliers=True)
+tc,c,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,tmin,tmax,fc,filtrar=True)#,sacar_outliers=True)
+t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,tmin,tmax,fc,filtrar=False)#,sacar_outliers=True)
 #t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3,tmin,tmax,filtrar=False)#,sacar_outliers=True)
 #t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4,tmin,tmax,filtrar=False)#,sacar_outliers=True)
 '''
-np.savetxt('curva carac cerca 1000V con t entre 0,5 y 1.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
+np.savetxt('curva carac cerca 1000V config 3 con t entre 2 y 4.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
 tensiones,corrientes,error_tensiones,error_corrientes=np.loadtxt('curva carac 800V final.txt',delimiter='\t')
 '''
 #%%

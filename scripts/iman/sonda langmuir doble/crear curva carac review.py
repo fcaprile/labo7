@@ -207,31 +207,33 @@ def vector_entre(x,xinf,xsup):
 #%%
 #analizo
 carpeta_base1='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva/'
-carpeta_base2='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
+carpeta_base2='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva sin filtrar/'
+carpeta_base3='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
+carpeta_base4='C:/Users/ferchi/Desktop/GitHub/labo7/mediciones/iman/10-16/pos/no filtrar/'
 #carpeta_base1='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva/'
 #carpeta_base2='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-9/bien ubicado/positiva sin filtrar/'
 #carpeta_base3='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/filtrar/'
 #carpeta_base4='C:/Users/DG/Documents/GitHub/labo7/mediciones/iman/10-16/pos/no filtrar/'
 
-fc=3*10**5
+fc=1*10**5
 order=4
 
 t1,c1,tm1,cm1,et1,ec1=curva_por_carpeta(carpeta_base1,0.5*10**-6,1.5*10**-6,fc,filtrar=True)#,sacar_outliers=True)
-t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,-0.5*10**-6,1.5*10**-6,fc,filtrar=True)#,sacar_outliers=True)
-#t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3,0.5*10**-6,1.5*10**-6,fc,filtrar=True)#,sacar_outliers=True)
-#t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4,0.5*10**-6,1.5*10**-6,filtrar=False)#,sacar_outliers=True)
+t2,c2,tm2,cm2,et2,ec2=curva_por_carpeta(carpeta_base2,0.5*10**-6,1.5*10**-6,fc,filtrar=False)#,sacar_outliers=True)
+t3,c3,tm3,cm3,et3,ec3=curva_por_carpeta(carpeta_base3,0.5*10**-6,1.5*10**-6,fc,filtrar=True)#,sacar_outliers=True)
+t4,c4,tm4,cm4,et4,ec4=curva_por_carpeta(carpeta_base4,0.5*10**-6,1.5*10**-6,fc,filtrar=False)#,sacar_outliers=True)
 
 #ojo al filtrar rama negativa
 '''
-np.savetxt('curva carac 1000V con t entre 0,5 y 1,5.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
+np.savetxt('curva carac config 1 1000V con t entre 0,5 y 1,5.txt',[tensiones,corrientes,error_corrientes], delimiter='\t')
 tensiones,corrientes,error_tensiones,error_corrientes=np.loadtxt('curva carac 800V final.txt',delimiter='\t')
 '''
 #%%
 #ploteo mediciones promediadas
-tensiones=np.concatenate([tm1,tm2])
-corrientes=np.concatenate([cm1,cm2])
-error_tensiones=np.concatenate([et1,et2])
-error_corrientes=np.concatenate([ec1,ec2])
+tensiones=np.concatenate([tm1,tm2,tm3,tm4])
+corrientes=np.concatenate([cm1,cm2,cm3,cm4])
+error_tensiones=np.concatenate([et1,et2,et3,et4])
+error_corrientes=np.concatenate([ec1,ec2,ec3,ec4])
 
 A2=np.array([tensiones,corrientes,error_corrientes,error_tensiones])
 A2=np.transpose(A2)
@@ -241,9 +243,9 @@ tensiones,corrientes,error_corrientes,error_tensiones=A2
 #tensiones,corrientes,error_corrientes,error_tensiones=tm1,cm1,et1,ec1
 #tensiones=np.array(tensiones)
 #tensiones=tensiones*-1
-#corrientes*=corrientes[24]
+corrientes*=-1
 
-plt.plot(tensiones,corrientes,'g*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
+plt.plot(tensiones,corrientes,'b*',label='Mediciones del 15/5')#para que de rasonable dividi por 2... no encuentro el motivo de que sea necesario
 plt.errorbar(tensiones,corrientes,error_corrientes,linestyle = 'None')
 
 plt.ylabel('Corriente (A)')
